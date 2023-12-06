@@ -1,23 +1,16 @@
 from collections import defaultdict
-import re
 
-file = open('./input.txt', 'r')
-lines = file.readlines()
-file.close();
+with open('./input.txt', 'r') as f:
+    lines = f.readlines()
 
 points = 0
-
 copies = defaultdict(int)
 
 def matches(line):
-    numbers = line.strip().split(':')[-1]
+    _, numbers = line.split(':')
     winning, owned = numbers.split('|')
 
-    winning = set(winning.strip().split())
-    owned = set(owned.strip().split())
-
-    return len(winning & owned)
-
+    return len(set(winning.split()) & set(owned.split()))
 
 for line in reversed(lines):
     card_number = int(line.split(':')[0].split()[-1])
