@@ -1,6 +1,5 @@
-file = open('./input.txt', 'r')
-lines = file.readlines()
-file.close();
+with open('./input.txt', 'r') as file:
+    lines = file.readlines()
 
 def points(line):
     _, numbers = line.split(':')
