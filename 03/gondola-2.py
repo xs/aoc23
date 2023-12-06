@@ -1,4 +1,5 @@
 import re
+from itertools import product
 
 file = open('./input.txt', 'r')
 lines = file.readlines()
@@ -40,23 +41,10 @@ sum = 0
 for gear in gears:
     r, c = gear
 
-    adjacents = set()
+    coords = product([r - 1, r, r + 1], [c - 1, c, c + 1])
 
-    coords = [
-        (r - 1, c - 1),
-        (r - 1, c),
-        (r - 1, c + 1),
-        (r, c - 1),
-        (r, c + 1),
-        (r + 1, c - 1),
-        (r + 1, c),
-        (r + 1, c + 1),
-    ]
-
-    for coord in coords:
-        part = get(*coord)
-        if part:
-            adjacents.add(part)
+    adjacents = set(get(*coord) for coords in coords)
+    adjacents.remove(None)
 
     if len(adjacents) == 2:
         print(f'gear! {adjacents}')
