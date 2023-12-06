@@ -1,24 +1,15 @@
-import re
-
 file = open('./input.txt', 'r')
 lines = file.readlines()
 file.close();
 
-points = 0
-
-for line in lines:
-    print(f'testing... {line}')
+def points(line):
     numbers = line.strip().split(':')[-1]
     winning, owned = numbers.split('|')
 
     winning = set(winning.strip().split())
     owned = set(owned.strip().split())
 
-    matches = winning & owned
+    matches = len(winning & owned)
+    return 2 ** (matches - 1) if matches else 0
 
-    if matches:
-        print(f'matches! {matches}')
-        points += 2 ** (len(matches) - 1)
-
-print(f'total points: {points}')
-
+print(sum(points(line) for line in lines))
