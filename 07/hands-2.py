@@ -10,7 +10,11 @@ def type_rank(hand):
     for label in hand:
         labels[label] += 1
 
-    shape = sorted(list(labels.values()), reverse=True)
+    jokers = labels['J']
+    del labels['J']
+
+    shape = sorted(list(labels.values()), reverse=True) or [0]
+    shape[0] += jokers
 
     type_ranks = [
         [1, 1, 1, 1, 1],
@@ -25,7 +29,7 @@ def type_rank(hand):
     return type_ranks.index(shape)
 
 def hand_value(hand):
-    return [type_rank(hand)] + ['23456789TJQKA'.index(card) for card in hand]
+    return [type_rank(hand)] + ['J23456789TQKA'.index(card) for card in hand]
 
 sorted_hands = sorted(hand_bets, key=hand_value)
 winnings = sum(rank * hand_bets[hand] for rank, hand in enumerate(sorted_hands, start=1))
