@@ -8,7 +8,8 @@ def type_rank(hand):
     labels = Counter(hand)
     jokers = labels['J']
     del labels['J']
-    shape = sorted(list(labels.values()), reverse=True) or [0]
+
+    shape = sorted(labels.values(), reverse=True) or [0]
     shape[0] += jokers
     return shape
 

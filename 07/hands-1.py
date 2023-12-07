@@ -6,12 +6,13 @@ with open('./input.txt', 'r') as f:
 
 def type_rank(hand):
     labels = Counter(hand)
-    return sorted(list(labels.values()), reverse=True)
+    return sorted(labels.values(), reverse=True)
 
 def hand_value(hand):
     return [type_rank(hand)] + ['23456789TJQKA'.index(card) for card in hand]
 
 sorted_hands = sorted(hand_bets, key=hand_value)
+
 winnings = sum(rank * hand_bets[hand] for rank, hand in enumerate(sorted_hands, start=1))
 
 print(f'{winnings=}')
