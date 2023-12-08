@@ -1,5 +1,6 @@
 import re
 from itertools import product
+from typing import Any, List
 
 file = open('./input.txt', 'r')
 lines = file.readlines()
@@ -8,7 +9,7 @@ file.close();
 width = len(lines[0])
 height = len(lines)
 
-grid = [[None for _ in range(width)] for _ in range(height)]
+grid: List[List[Any]] = [[None for _ in range(width)] for _ in range(height)]
 
 parts = []
 gears = []
@@ -43,15 +44,19 @@ for gear in gears:
 
     coords = product([r - 1, r, r + 1], [c - 1, c, c + 1])
 
-    adjacents = set(get(*coord) for coords in coords)
+    adjacents = set(get(*coord) for coord in coords)
     adjacents.remove(None)
 
     if len(adjacents) == 2:
         print(f'gear! {adjacents}')
 
         adjacents = list(adjacents)
+        first, second = adjacents
 
-        power_ratio = adjacents[0][0] * adjacents[1][0]
+        assert first is not None
+        assert second is not None
+
+        power_ratio = first[0] * second[0]
 
         sum += power_ratio
 
