@@ -119,10 +119,7 @@ class Field(object):
     def landscape(self) -> None:
         ''' Clear all pipe not on the path.
 
-        Traverses field first if not already traversed. '''
-
-        if not self.path:
-            self.traverse()
+        Assumes field is traversed. '''
 
         for r, c in self.all_coords():
             if (r, c) not in self.path:
@@ -133,17 +130,14 @@ class Field(object):
     def is_enclosed(self, coord: Coord) -> bool:
         ''' Returns True if coord is enclosed; False if not.
 
-        Landscapes (and traverses) field first if not already landscaped. '''
-
-        if not self.landscaped:
-            self.landscape()
+        Assumes field is traversed and landscaped. '''
 
         if coord in self.path:
             return False
         else:
             r, c = coord
             escape_route = ''.join(self.grid[r][:c])
-            crossings = list(re.finditer(r'(\||L-*7|F-*J)', escape_route))
+            crossings = re.findall(r'(\||L-*7|F-*J)', escape_route)
             return len(crossings) % 2 == 1
 
     def count_enclosed_tiles(self) -> int:
