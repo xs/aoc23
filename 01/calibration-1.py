@@ -1,27 +1,10 @@
-import sys
-
-lines = sys.stdin.readlines()
-
-sum = 0
+with open('input.txt', 'r') as f:
+    lines = f.readlines()
 
 def calibrate(line):
-    start = 0
-    end = 0
-
-    for char in line:
-        if char.isdigit():
-            start = int(char)
-            break
-
-    for char in reversed(line):
-        if char.isdigit():
-            end = int(char)
-            break
+    start = int(next(char for char in line if char.isdigit()))
+    end = int(next(char for char in reversed(line) if char.isdigit()))
 
     return 10 * start + end
 
-for line in lines:
-    sum += calibrate(line)
-
-print(f'calibration sum: {sum}')
-
+print(f'calibration sum: {sum(calibrate(line) for line in lines)}')
