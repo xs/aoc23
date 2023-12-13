@@ -16,6 +16,9 @@ def poss(condition: str, springs: tuple) -> int:
                 # an impossiblity
                 res = 0
             else:
+                # limit our sliding window to a margin around the known "#"
+                # e.g. ?????##?????, 4 can only slide here:
+                #         ^^^^^^
                 margin = spring_length - len(known_parts)
                 window_pattern = rf'(\?{{0,{margin}}}{re.escape(known_parts)}\?{{0,{margin}}})'
                 window_match = re.search(window_pattern, condition)
@@ -36,16 +39,14 @@ def poss(condition: str, springs: tuple) -> int:
 
         first, *rest = springs
         new_condition = condition.lstrip('.')
+        start_bound = len(new_condition) - sum(springs) - len(springs) + 1
+
         if '#' in condition:
-            known_start = new_condition.index('#')
-            start_locations = list(range(known_start + 1))
-        else:
-            known_start = len(new_condition) - sum(springs) + len(springs) - 1
-            start_locations = list(range(known_start))
+            start_bound = min(new_condition.index('#'), start_bound)
+
         count = 0
-        for i in start_locations:
-            if i + first >= len(new_condition):
-                break
+
+        for i in range(start_bound + 1):
             prefix = new_condition[i:i + first]
             buffer = new_condition[i + first]
             suffix = new_condition[i + first + 1:]
