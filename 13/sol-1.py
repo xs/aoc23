@@ -1,26 +1,17 @@
 from sys import stdin
 from typing import List
 
-lines = [line.strip() for line in stdin.readlines()] + [""]
-patterns = []
+patterns = [pattern_string.splitlines() for pattern_string in stdin.read().split("\n\n")]
 
-while lines:
-    next_empty = lines.index("")
-    patterns.append(lines[:next_empty])
-    lines.pop(next_empty)
-    del lines[:next_empty]
+def can_reflect(line: str, i: int) -> bool:
+    """Given a line and index, returns True if the string reflects at that index"""
+    normal = reversed(line[:i])
+    reflection = line[i:]
+    return all(p == q for p, q in zip(normal, reflection))
 
 def get_reflections(line: str):
     """Given a line, return columns before which a line of reflection may exist."""
-
-    indices = set()
-    for i in range(1, len(line)):
-        normal = reversed(line[:i])
-        reflection = line[i:]
-        if all(p == q for p, q in zip(normal, reflection)):
-            indices.add(i)
-
-    return indices
+    return set(i for i in range(1, len(line)) if can_reflect(line, i))
 
 def vertical(pattern: List[str]) -> int | None:
     """Return the vertical reflection line or None if none exists."""
@@ -41,13 +32,8 @@ def horizontal(pattern: List[str]) -> int | None:
     return reflections.pop()
 
 def value(pattern):
-    v = vertical(pattern)
-    if v:
-        return v
-    else:
-        h = horizontal(pattern)
-        assert h is not None
-        return 100 * h
-
+    v = vertical(pattern) or 0
+    h = horizontal(pattern) or 0
+    return 100 * h + v
 
 print(sum(value(p) for p in patterns))

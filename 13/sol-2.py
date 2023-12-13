@@ -2,26 +2,17 @@ from sys import stdin
 from typing import List
 from collections import defaultdict
 
-lines = [line.strip() for line in stdin.readlines()] + [""]
-patterns = []
+patterns = [pattern_string.splitlines() for pattern_string in stdin.read().split("\n\n")]
 
-while lines:
-    next_empty = lines.index("")
-    patterns.append(lines[:next_empty])
-    lines.pop(next_empty)
-    del lines[:next_empty]
+def can_reflect(line: str, i: int) -> bool:
+    """Given a line and index, returns True if the string reflects at that index"""
+    normal = reversed(line[:i])
+    reflection = line[i:]
+    return all(p == q for p, q in zip(normal, reflection))
 
 def get_reflections(line: str):
     """Given a line, return columns before which a line of reflection may exist."""
-
-    indices = set()
-    for i in range(1, len(line)):
-        normal = reversed(line[:i])
-        reflection = line[i:]
-        if all(p == q for p, q in zip(normal, reflection)):
-            indices.add(i)
-
-    return indices
+    return set(i for i in range(1, len(line)) if can_reflect(line, i))
 
 def vertical_candidates(pattern: List[str]) -> List[int]:
     """Return possible candidates for a new post-smudge vertical reflection line."""
@@ -31,7 +22,6 @@ def vertical_candidates(pattern: List[str]) -> List[int]:
             reflections[reflection] += 1
 
     return [r for r in reflections if reflections[r] == len(pattern) - 1]
-
 
 def horizontal_candidates(pattern: List[str]) -> List[int]:
     """Return possible candidates for a new post-smudge horizontal reflection line."""
@@ -51,6 +41,5 @@ def value(pattern):
         return v[0]
     else:
         return 100 * h[0]
-
 
 print(sum(value(p) for p in patterns))
