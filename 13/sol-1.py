@@ -5,9 +5,7 @@ patterns = [pattern_string.splitlines() for pattern_string in stdin.read().split
 
 def can_reflect(line: str, i: int) -> bool:
     """Given a line and index, returns True if the string reflects at that index"""
-    normal = reversed(line[:i])
-    reflection = line[i:]
-    return all(p == q for p, q in zip(normal, reflection))
+    return all(p == q for p, q in zip(reversed(line[:i]), line[i:]))
 
 def get_reflections(line: str):
     """Given a line, return columns before which a line of reflection may exist."""
@@ -17,19 +15,15 @@ def vertical(pattern: List[str]) -> int | None:
     """Return the vertical reflection line or None if none exists."""
     reflections = set(range(1, len(pattern[0])))
     for line in pattern:
-        reflections = reflections & get_reflections(line)
-        if not reflections:
-            return None
-    return reflections.pop()
+        reflections &= get_reflections(line)
+    return reflections.pop() if reflections else None
 
 def horizontal(pattern: List[str]) -> int | None:
     """Return the horizontal reflection line or None if none exists."""
     reflections = set(range(1, len(pattern)))
     for line in zip(*pattern):
-        reflections = reflections & get_reflections(line)
-        if not reflections:
-            return None
-    return reflections.pop()
+        reflections &= get_reflections(line)
+    return reflections.pop() if reflections else None
 
 def value(pattern):
     v = vertical(pattern) or 0
